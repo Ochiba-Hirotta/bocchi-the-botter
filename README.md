@@ -1,0 +1,101 @@
+# bocchi-the-botter
+
+Note 連載「ぼっち・ざ・ぼったー」の検証を再現するためのコードです。
+
+## 目的
+
+- 各章の再現コードを `chapters/season1/` 配下に章別で置く。
+- 複数章で使うバックテスト基盤、データ取得、指標計算、戦略実装を `src/bocchi_the_botter_repro/common/` に集約する。
+- yfinance は `start` / `end` の絶対期間指定で取得し、`period="720d"` のような実行日依存指定を避ける。
+- yfinance の履歴上限や再取得差分に備え、記事時点の派生結果 CSV を `results/reference/` に固定する。
+
+## 構成
+
+```text
+bocchi-the-botter/
+├── README.md
+├── requirements.txt
+├── pyproject.toml
+├── chapters/
+│   ├── README.md
+│   └── season1/
+│       ├── ch00_prologue/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch01_usdjpy_bb_mr/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch01_1_spread_correction/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch02_gbpjpy_spread_sensitivity/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch03_two_year_segments/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch04_wfa_two_pairs/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch05_wfa_four_pairs/
+│       │   ├── README.md
+│       │   └── run.py
+│       ├── ch06_donchian_compare/
+│       │   ├── README.md
+│       │   └── run.py
+│       └── ch07_physical_metrics/
+│           ├── README.md
+│           └── run.py
+├── src/
+│   └── bocchi_the_botter_repro/
+│       └── common/
+│           ├── data/
+│           ├── backtest/
+│           └── reproduction.py
+├── results/
+│   └── reference/
+├── outputs/
+└── data_cache/
+```
+
+## セットアップ
+
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+```
+
+## 章別実行
+
+各章は `chapters/season1/chXX_*/run.py` を入口にします。
+
+```bash
+python chapters/season1/ch04_wfa_two_pairs/run.py --mode smoke
+python chapters/season1/ch05_wfa_four_pairs/run.py --mode smoke
+python chapters/season1/ch06_donchian_compare/run.py --mode smoke
+```
+
+記事時点の既定終端は `2026-04-29T00:00:00Z` です。
+
+## 再現性について
+
+yfinance の 1h 足は取得できる期間に上限があります。公開後に再取得する場合は、`--end-date` を現在から約 730 日以内に収まる範囲へ変更してください。
+
+また、yfinance のデータは取得時期、配信元の修正、欠損、仕様変更により結果が変わる場合があります。そのため、記事時点の主要な派生結果 CSV を `results/reference/` に配置しています。
+
+## 参照出力
+
+記事時点の主要な派生結果 CSV は `results/reference/` に配置しています。
+
+- `ch04_wfa_two_pairs/`: USDJPY / GBPJPY の BB-MR WFA と 2 ペア比較表。
+- `ch05_wfa_four_pairs/`: 4 ペアの BB-MR WFA と重心 summary。
+- `ch06_donchian_compare/`: 4 ペアの BB-MR / Donchian WFA と戦略比較表。
+- `ch07_physical_metrics/`: 8 grid x 5 fold の取引系列、fold 別集計、grid 別集計。
+
+市場データの Parquet キャッシュ本体は含めていません。
+
+## 注意事項
+
+本リポジトリの検証は、取得時点の公開データと記載した条件に基づくものです。データ取得元の仕様変更、欠損、修正、配信遅延などにより、結果が変わる場合があります。本リポジトリは投資助言ではなく、売買判断はご自身の責任でお願いします。
