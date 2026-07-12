@@ -19,3 +19,9 @@
 | #5 | `season1/ch05_wfa_four_pairs/` | 4 ペア WFA + 重心 |
 | #6 | `season1/ch06_donchian_compare/` | BB-MR vs Donchian |
 | #7 | `season1/ch07_physical_metrics/` | 8 grid x 5 fold の 4 物理量 |
+
+## Season 2
+
+| 章 | フォルダ | 役割 |
+|---|---|---|
+| S2-1 | `season2/ch01_orb_1h_translation/` | EURUSD・15 分足の ORB 最終形を USDJPY・1 時間足へ翻訳 |
