@@ -77,7 +77,7 @@
     "volume": "sum of three complete M5 candles",
     "missing_policy": "do not fill; reject incomplete M15 buckets",
     "timezone": "UTC authoritative; America/New_York labels derived",
-    "information_loss": "M5 internal order/path and authoritative mid high/low are not recoverable from M15"
+    "information_loss": "M5 component OHLC, intra-M5 high/low order, price path, and authoritative mid high/low are not recoverable from M15"
   },
   "command": "python chapters/season2/ch02_minute_data_db/build_manifest.py --db \"$SOURCE_DB\" --instrument USD_JPY --start 2024-01-01T22:00:00Z --end 2026-07-14T10:05:00Z --manifest results/reference/ch02_minute_data_db/manifest.json"
 }

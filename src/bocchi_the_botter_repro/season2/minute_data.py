@@ -1421,8 +1421,8 @@ def build_evidence_manifest(
             "missing_policy": "do not fill; reject incomplete M15 buckets",
             "timezone": "UTC authoritative; America/New_York labels derived",
             "information_loss": (
-                "M5 internal order/path and authoritative mid high/low are not "
-                "recoverable from M15"
+                "M5 component OHLC, intra-M5 high/low order, price path, and "
+                "authoritative mid high/low are not recoverable from M15"
             ),
         },
         "command": command,
