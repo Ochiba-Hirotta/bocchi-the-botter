@@ -47,10 +47,13 @@ bocchi-the-botter/
 │   │       ├── README.md
 │   │       └── run.py
 │   └── season2/
-│       └── ch01_orb_1h_translation/
+│       ├── ch01_orb_1h_translation/
+│       │   ├── README.md
+│       │   ├── run.py
+│       │   └── figures.py
+│       └── ch02_minute_data_db/
 │           ├── README.md
-│           ├── run.py
-│           └── figures.py
+│           └── run.py
 ├── src/
 │   └── bocchi_the_botter_repro/
 │       ├── common/
@@ -58,9 +61,11 @@ bocchi-the-botter/
 │       │   ├── backtest/
 │       │   └── reproduction.py
 │       └── season2/
-│           └── orb.py
+│           ├── orb.py
+│           └── minute_data.py
 ├── tests/
-│   └── test_s2_1_orb.py
+│   ├── test_s2_1_orb.py
+│   └── test_s2_2_minute_data.py
 ├── results/
 │   └── reference/
 ├── outputs/
@@ -85,11 +90,14 @@ python chapters/season1/ch04_wfa_two_pairs/run.py --mode smoke
 python chapters/season1/ch05_wfa_four_pairs/run.py --mode smoke
 python chapters/season1/ch06_donchian_compare/run.py --mode smoke
 python chapters/season2/ch01_orb_1h_translation/run.py
+python chapters/season2/ch02_minute_data_db/run.py --help
 ```
 
 Season 1 の記事時点の既定終端は `2026-04-29T00:00:00Z` です。
 
 Season 2 #1 は、既定で記事時点の参照 CSV を検証します。Yahoo Finance から現在のデータを取得し、記事の固定窓で再計算する場合は `--live` を付けます。
+
+Season 2 #2 の最小コードは、OANDA practice APIの完了済み`M5 / BA`を独立した記事用SQLiteへ保存します。token、account情報、生レートはリポジトリへ保存しません。
 
 ## テスト
 

@@ -10,6 +10,7 @@ dependencies = [
     "numpy==2.4.4",
     "backtesting==0.6.5",
     "matplotlib==3.10.8",
+    "requests==2.34.2",
 ]
 
 [project.optional-dependencies]
@@ -26,4 +27,3 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
-

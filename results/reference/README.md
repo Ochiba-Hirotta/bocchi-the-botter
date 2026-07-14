@@ -10,6 +10,7 @@
 results/reference/ch04_wfa_two_pairs/
 results/reference/ch05_wfa_four_pairs/
 results/reference/ch01_orb_1h_translation/
+results/reference/ch02_minute_data_db/
 ```
 
 ## 配置済み
@@ -19,7 +20,10 @@ results/reference/ch01_orb_1h_translation/
 - `ch06_donchian_compare/`: 4 ペアの BB-MR / Donchian WFA と戦略比較表。
 - `ch07_physical_metrics/`: 8 grid x 5 fold の取引系列、fold 別集計、grid 別集計。
 - `ch01_orb_1h_translation/`: Season 2 #1 の主版・参考版取引明細と、720 暦日窓を分けた固定 144 日×5 区間の集計。
+- `ch02_minute_data_db/`: Season 2 #2 のDB同一性、M5抽出、gap、M15集約を固定した行データなしの監査manifest。
 
 `ch07_physical_metrics/trades_7_*.csv` は、市場データ本体ではなく、#7 の 4 物理量を再集計するための取引系列です。`wfa_results_7_per_fold.csv` の `oos_sharpe` と `oos_n_trades_raw` は元 WFA 由来の補助列で、取引系列だけから再計算する物理量ではありません。
 
 `ch01_orb_1h_translation/` の CSV は記事時点の派生結果です。`figures/` には記事で使用した最終 PNG 4 点を置いています。元 OHLC は同梱していません。Yahoo Finance の修正・欠損・仕様変更により、後日のライブ再計算が参照 CSV や最終 PNG と一致しない可能性があります。
+
+`ch02_minute_data_db/manifest.json` は元SQLiteのbasenameとhash、および集計値だけを持ちます。OANDAの行単位レート、SQLite本体、token、account情報、ユーザー固有の絶対pathは含みません。

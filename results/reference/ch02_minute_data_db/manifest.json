@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-07-14T11:33:46Z",
+  "code_commit": "b87983acf4d39878993d04a7bc9cd13cd711b113-dirty",
+  "python_version": "3.13.14",
+  "pandas_version": "3.0.2",
+  "requests_version": "2.34.2",
+  "source": "oanda_rest_v20",
+  "environment": "practice",
+  "instrument": "USD_JPY",
+  "granularity": "M5",
+  "price": "BA",
+  "range": {
+    "start_inclusive": "2024-01-01T22:00:00Z",
+    "end_exclusive": "2026-07-14T10:05:00Z"
+  },
+  "db": {
+    "role": "upstream_read_only_source",
+    "basename": "rates.sqlite",
+    "sha256": "edb6e54fe519af25b27508102fa8d9e2d949b8acddd3286fb59c59c65171cf46",
+    "quick_check": "ok",
+    "user_version": 0
+  },
+  "fetch": {
+    "policy": "article_reproduction_code",
+    "chunk_days": 14,
+    "request_count": null,
+    "complete_received": null,
+    "incomplete_skipped": null,
+    "counters_scope": "not_recorded_for_upstream_snapshot"
+  },
+  "m5": {
+    "row_count": 188981,
+    "first_ts_utc": "2024-01-01T22:00:00Z",
+    "last_ts_utc": "2026-07-14T10:00:00Z",
+    "duplicate_count": 0,
+    "off_boundary_count": 0,
+    "null_required_count": 0,
+    "invalid_volume_count": 0,
+    "invalid_ohlc_count": 0,
+    "negative_spread_count": 0,
+    "sorted_ascending": true,
+    "gap_count": 192,
+    "missing_m5_slots": 77276,
+    "gap_classification": {
+      "weekend_closure_candidate": 132,
+      "long_non_weekend_closure_candidate": 4,
+      "short_unclassified": 56
+    },
+    "extraction_sha256": "f6d0e1cd1bd50ec11f7f3f0bd34e31b61a39970a687f3c5ac83682ae2ea1d512"
+  },
+  "m15": {
+    "complete_bucket_count": 62957,
+    "incomplete_bucket_count": 61,
+    "incomplete_reason": {
+      "missing_m5": 60,
+      "extraction_boundary": 1
+    },
+    "incomplete_component_count": {
+      "one": 12,
+      "two": 49
+    },
+    "first_ts_utc": "2024-01-01T22:00:00Z",
+    "last_ts_utc": "2026-07-14T09:45:00Z",
+    "m5_rows_in_complete_buckets": 188871,
+    "m5_rows_in_incomplete_buckets": 110,
+    "zero_row_bucket_note": "Buckets with no M5 rows are represented only by the M5 gap audit."
+  },
+  "derivation": {
+    "m15_bucket": "UTC floor(ts_utc / 900) * 900",
+    "required_m5_offsets_seconds": [
+      0,
+      300,
+      600
+    ],
+    "ohlc": "open=first, high=max, low=min, close=last; bid/ask separate",
+    "volume": "sum of three complete M5 candles",
+    "missing_policy": "do not fill; reject incomplete M15 buckets",
+    "timezone": "UTC authoritative; America/New_York labels derived",
+    "information_loss": "M5 internal order/path and authoritative mid high/low are not recoverable from M15"
+  },
+  "command": "python chapters/season2/ch02_minute_data_db/build_manifest.py --db \"$SOURCE_DB\" --instrument USD_JPY --start 2024-01-01T22:00:00Z --end 2026-07-14T10:05:00Z --manifest results/reference/ch02_minute_data_db/manifest.json"
+}
