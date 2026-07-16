@@ -1,0 +1,17 @@
+{
+  "candidate_sessions": 920,
+  "invalid_sessions": 269,
+  "missing_required_bars": 7249,
+  "partial_sessions": 1,
+  "valid_sessions": 651,
+  "zero_bar_sessions": 268,
+  "terminal_outcomes": {
+    "atr_above": 8,
+    "atr_below": 341,
+    "atr_passed": 302,
+    "cutoff": 7,
+    "invalid_session": 269,
+    "no_breakout": 3,
+    "traded": 292
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "article_window_et": {
+    "start_inclusive": "2024-01-06",
+    "end_exclusive": "2026-07-14",
+    "calendar_days": 920
+  },
+  "input": {
+    "source": "oanda_rest_v20",
+    "instrument": "USD_JPY",
+    "granularity": "M5_to_M15",
+    "price": "BA",
+    "start_inclusive_utc": "2024-01-01T22:00:00Z",
+    "end_exclusive_utc": "2026-07-14T10:05:00Z",
+    "extraction_sha256": "f6d0e1cd1bd50ec11f7f3f0bd34e31b61a39970a687f3c5ac83682ae2ea1d512",
+    "m5_rows": 188981,
+    "complete_m15": 62957,
+    "incomplete_m15": 61
+  },
+  "execution": {
+    "signal": "bid OHLC",
+    "long": "entry ask_open; exit bid",
+    "short": "entry bid_open; exit ask",
+    "fixed_spread_addition": 0,
+    "commission": 0,
+    "ordinary_slippage": 0,
+    "same_bar_priority": "SL",
+    "forced_exit": "16:00 ET execution-side open"
+  },
+  "summary": {
+    "trade_count": 292,
+    "final_equity": 783520.6559999847,
+    "return_pct": -21.647934400001535,
+    "win_rate_pct": 44.178082191780824,
+    "max_drawdown_pct": -26.542575662979832,
+    "profit_factor": 0.8339762502628308,
+    "average_realized_r": -0.0790048735531711,
+    "positive_segments": 1,
+    "long_count": 161,
+    "short_count": 131,
+    "criterion_passed": false
+  },
+  "criterion": "return_pct > 0 and positive_segments >= 3"
+}

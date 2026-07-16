@@ -1,0 +1,30 @@
+{
+  "entry_open_quote_width": {
+    "count": 292,
+    "minimum": 0.012000000000000455,
+    "p25": 0.014999999999986358,
+    "median": 0.015999999999991132,
+    "mean": 0.01727054794520521,
+    "p75": 0.018000000000000682,
+    "maximum": 0.09600000000000364
+  },
+  "all_m15_open_quote_width": {
+    "count": 62957,
+    "minimum": 0.011999999999972033,
+    "p25": 0.01500000000001478,
+    "median": 0.016999999999995907,
+    "mean": 0.019342138284861053,
+    "p75": 0.018000000000000682,
+    "maximum": 0.10000000000002274
+  },
+  "all_m15_close_quote_width": {
+    "count": 62957,
+    "minimum": 0.011999999999972033,
+    "p25": 0.01500000000001478,
+    "median": 0.016999999999995907,
+    "mean": 0.019015089664374138,
+    "p75": 0.018000000000000682,
+    "maximum": 0.10000000000002274
+  },
+  "warning": "Open/close quote widths are not intrabar maximum/minimum spread and do not reconstruct spread at SL/TP time."
+}
