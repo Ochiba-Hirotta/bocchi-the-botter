@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source_manifest_sha256": "cec601deb8b2d1230f1640205baa57e54f72af11453e68e0d5d941d984c65af4",
+  "generator_sha256": "ee3987494900e8790869b5bd4891ef61aa49e447f192cbc98ec726f13f0c605b",
+  "figure_sha256": {
+    "bullish_ob_rule_schema.png": "ec828ffc7d8879c0b002620dbf1b5e4b7dfe65cac65e8bb005aee478c063913e",
+    "exit_reasons.png": "cc62fee61082b81c31e6aa86ed5ccecce37cac660ab96877b9ca0de20f290c97",
+    "segment_boundary_balance.png": "6f50e10e5f2ef9ca95ed6c1a79df257e62cd1f1272858cb6f96d3ce0b4140780"
+  }
+}

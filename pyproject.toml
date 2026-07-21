@@ -11,6 +11,7 @@ dependencies = [
     "backtesting==0.6.5",
     "matplotlib==3.10.8",
     "requests==2.34.2",
+    "smartmoneyconcepts==0.0.27",
 ]
 
 [project.optional-dependencies]

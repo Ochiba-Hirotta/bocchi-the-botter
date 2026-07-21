@@ -1,0 +1,442 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-07-21T00:03:16Z",
+  "code_commit": "df25b3e05fb9f7e835b92072634a68446845169d-dirty",
+  "environment": {
+    "python": "3.13.14",
+    "dependencies": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "smartmoneyconcepts": "0.0.27"
+    }
+  },
+  "reproducibility_runs": 2,
+  "article_window_et": {
+    "start_inclusive": "2024-01-06",
+    "end_exclusive": "2026-07-14",
+    "segment_count": 5
+  },
+  "input": {
+    "source": "oanda_rest_v20",
+    "source_environment": "practice",
+    "instrument": "USD_JPY",
+    "granularity": "M5_to_complete_M15",
+    "price": "BA",
+    "db": {
+      "role": "upstream_read_only_source",
+      "basename": "rates.sqlite",
+      "binary_hash_policy": "not pinned here because the append-only upstream file may grow; the fixed projection is identified by extraction_sha256"
+    },
+    "range_utc": {
+      "start_inclusive": "2024-01-01T22:00:00Z",
+      "end_exclusive": "2026-07-14T10:05:00Z"
+    },
+    "m5": {
+      "row_count": 188981,
+      "first_ts_utc": "2024-01-01T22:00:00Z",
+      "last_ts_utc": "2026-07-14T10:00:00Z",
+      "duplicate_count": 0,
+      "off_boundary_count": 0,
+      "null_required_count": 0,
+      "invalid_volume_count": 0,
+      "invalid_ohlc_count": 0,
+      "negative_spread_count": 0,
+      "sorted_ascending": true,
+      "gap_count": 192,
+      "missing_m5_slots": 77276,
+      "gap_classification": {
+        "weekend_closure_candidate": 132,
+        "long_non_weekend_closure_candidate": 4,
+        "short_unclassified": 56
+      },
+      "extraction_sha256": "f6d0e1cd1bd50ec11f7f3f0bd34e31b61a39970a687f3c5ac83682ae2ea1d512"
+    },
+    "derived": {
+      "complete_m15_count": 62957,
+      "incomplete_m15_count": 61,
+      "accepted_daily_count": 656,
+      "rejected_daily_count": 1,
+      "daily_swing_count": 170,
+      "m15_swing_count": 16429,
+      "bias_at_open_counts": {
+        "bearish": 17438,
+        "bullish": 27630,
+        "neutral": 16067,
+        "unavailable": 1822
+      },
+      "bias_at_close_counts": {
+        "bearish": 17438,
+        "bullish": 27629,
+        "neutral": 16069,
+        "unavailable": 1821
+      }
+    }
+  },
+  "shared_execution": {
+    "signal_prices": "bid OHLC",
+    "long": "entry ask; exits bid",
+    "short": "entry bid; exits ask",
+    "fixed_spread_addition": 0,
+    "commission": 0,
+    "ordinary_slippage": 0,
+    "swap": 0,
+    "same_bar_priority": "SL",
+    "forced_exit": null,
+    "position_risk_fraction": 0.01,
+    "minimum_sample_size": 30,
+    "criterion": "sample >= 30 closed trades, return_pct > 0, and positive_segments >= 3 of 5"
+  },
+  "detectors": {
+    "official": {
+      "translation": "ICT Mentorship 2022 Month 04 frozen mechanical translation",
+      "target": "latest confirmed eligible daily external-liquidity swing",
+      "summary": {
+        "detector": "ict_month04",
+        "zone_count": 1121,
+        "trade_count": 534,
+        "open_position_count": 0,
+        "final_equity": 169545.91199998523,
+        "return_pct": -83.04540880000147,
+        "win_rate_pct": 11.235955056179774,
+        "max_drawdown_pct": -83.47429600000147,
+        "profit_factor": 0.5408297244493836,
+        "average_realized_r": -0.2595560860882274,
+        "positive_segments": 1,
+        "long_count": 273,
+        "short_count": 261,
+        "sample_sufficient": true,
+        "criterion": "failed"
+      },
+      "segments": [
+        {
+          "segment": 1,
+          "start": "2024-01-06",
+          "end_exclusive": "2024-07-08",
+          "trade_count": 60,
+          "pnl_jpy": -371162.8400000034,
+          "return_pct": -37.11628400000034
+        },
+        {
+          "segment": 2,
+          "start": "2024-07-08",
+          "end_exclusive": "2025-01-08",
+          "trade_count": 107,
+          "pnl_jpy": -294726.96600000473,
+          "return_pct": -46.8685670547851
+        },
+        {
+          "segment": 3,
+          "start": "2025-01-08",
+          "end_exclusive": "2025-07-11",
+          "trade_count": 154,
+          "pnl_jpy": 40937.03799999799,
+          "return_pct": 12.252555813965671
+        },
+        {
+          "segment": 4,
+          "start": "2025-07-11",
+          "end_exclusive": "2026-01-11",
+          "trade_count": 104,
+          "pnl_jpy": -99198.77100000442,
+          "return_pct": -26.44967421063571
+        },
+        {
+          "segment": 5,
+          "start": "2026-01-11",
+          "end_exclusive": "2026-07-14",
+          "trade_count": 109,
+          "pnl_jpy": -106302.54900000052,
+          "return_pct": -38.53657497839225
+        }
+      ],
+      "detection_counters": {
+        "bias_mismatch": 1169,
+        "bias_unavailable": 877,
+        "long_ambiguous_break_invalidated": 216,
+        "long_candidate_invalidated": 1147,
+        "long_candidate_replaced": 2346,
+        "long_candidate_selected": 2599,
+        "long_zone_detected": 649,
+        "short_ambiguous_break_invalidated": 338,
+        "short_candidate_invalidated": 1453,
+        "short_candidate_replaced": 3169,
+        "short_candidate_selected": 3169,
+        "short_zone_detected": 472,
+        "zone_detected": 1121
+      },
+      "execution_counters": {
+        "bias_unavailable": 10,
+        "filled": 534,
+        "no_target": 120,
+        "sizing_rejected": 90,
+        "trade_closed": 534,
+        "zone_activated": 1121,
+        "zone_consumed": 744,
+        "zone_invalidated": 183,
+        "zone_outside_window": 0,
+        "zone_replaced": 193
+      },
+      "exit_reasons": {
+        "gap_sl": 4,
+        "sl": 470,
+        "tp": 60
+      },
+      "lifecycle": {
+        "total": 1121,
+        "by_side": {
+          "long": 649,
+          "short": 472
+        },
+        "by_end_reason": {
+          "consumed": 744,
+          "data_end": 1,
+          "invalidated": 183,
+          "replaced": 193
+        },
+        "zero_duration_count": 0
+      },
+      "hashes": {
+        "zones_sha256": "bdf49452b621cde0f30a2febe8640c0355f8c416b69a2f1996b10cc4f52f0588",
+        "trades_sha256": "2722ac5009dc95d5cb5d7b002edcddeacc13d55ea864891f4e65ea000b37f9d4",
+        "terminal_sha256": "37f2de612b2e723ff8a6607ff39768ea42d063d5225c06c4e933e5cb1b3db880",
+        "detector_result_sha256": "5fda4513fa7711e4526f561007c5d438d5d37c7bc12ec297940684ae607c5d76",
+        "lifecycles_sha256": "055a20ee5f472fee4b390de7d94aaf1494d0a9ba274deb8b40131d653abdad02"
+      }
+    },
+    "secondary": {
+      "translation": "17-minute sweep -> MSS -> displacement/FVG frozen translation",
+      "target": "latest confirmed eligible M15 opposing swing",
+      "summary": {
+        "detector": "ict_secondary_17m",
+        "zone_count": 321,
+        "trade_count": 194,
+        "open_position_count": 0,
+        "final_equity": 768671.8119999873,
+        "return_pct": -23.132818800001264,
+        "win_rate_pct": 38.659793814432994,
+        "max_drawdown_pct": -27.83220172185566,
+        "profit_factor": 0.7933112647934327,
+        "average_realized_r": -0.12415774559521815,
+        "positive_segments": 2,
+        "long_count": 109,
+        "short_count": 85,
+        "sample_sufficient": true,
+        "criterion": "failed"
+      },
+      "segments": [
+        {
+          "segment": 1,
+          "start": "2024-01-06",
+          "end_exclusive": "2024-07-08",
+          "trade_count": 19,
+          "pnl_jpy": -115975.72900000245,
+          "return_pct": -11.597572900000246
+        },
+        {
+          "segment": 2,
+          "start": "2024-07-08",
+          "end_exclusive": "2025-01-08",
+          "trade_count": 49,
+          "pnl_jpy": 15212.2250000011,
+          "return_pct": 1.7207926862452787
+        },
+        {
+          "segment": 3,
+          "start": "2025-01-08",
+          "end_exclusive": "2025-07-11",
+          "trade_count": 54,
+          "pnl_jpy": 71595.57199999603,
+          "return_pct": 7.961817866431006
+        },
+        {
+          "segment": 4,
+          "start": "2025-07-11",
+          "end_exclusive": "2026-01-11",
+          "trade_count": 37,
+          "pnl_jpy": -97483.91900000248,
+          "return_pct": -10.041275130191005
+        },
+        {
+          "segment": 5,
+          "start": "2026-01-11",
+          "end_exclusive": "2026-07-14",
+          "trade_count": 35,
+          "pnl_jpy": -104676.33700000476,
+          "return_pct": -11.985636784123498
+        }
+      ],
+      "detection_counters": {
+        "bias_mismatch": 3466,
+        "bias_unavailable": 2862,
+        "fvg_confirmed": 509,
+        "long_mss_confirmed": 494,
+        "long_no_fvg": 165,
+        "long_no_mss": 364,
+        "long_no_ob": 118,
+        "long_sweep_detected": 2097,
+        "long_sweep_replaced": 1239,
+        "long_zone_detected": 210,
+        "mss_confirmed": 768,
+        "no_fvg": 259,
+        "no_mss": 631,
+        "no_ob": 184,
+        "short_mss_confirmed": 274,
+        "short_no_fvg": 94,
+        "short_no_mss": 267,
+        "short_no_ob": 66,
+        "short_sweep_detected": 1358,
+        "short_sweep_replaced": 817,
+        "short_zone_detected": 111,
+        "sweep_detected": 3455,
+        "sweep_replaced": 2056,
+        "zone_detected": 321
+      },
+      "execution_counters": {
+        "bias_unavailable": 22,
+        "filled": 194,
+        "no_target": 4,
+        "sizing_rejected": 72,
+        "trade_closed": 194,
+        "zone_activated": 321,
+        "zone_consumed": 270,
+        "zone_invalidated": 5,
+        "zone_outside_window": 0,
+        "zone_replaced": 46
+      },
+      "exit_reasons": {
+        "gap_sl": 3,
+        "sl": 116,
+        "tp": 75
+      },
+      "lifecycle": {
+        "total": 321,
+        "by_side": {
+          "long": 210,
+          "short": 111
+        },
+        "by_end_reason": {
+          "consumed": 270,
+          "invalidated": 5,
+          "replaced": 46
+        },
+        "zero_duration_count": 0
+      },
+      "hashes": {
+        "zones_sha256": "4d82f73eb5423cc8d54039e31d4814f6619fb28ec5e60f17da898123a7e676df",
+        "trades_sha256": "5f29e64503959bf6203676a70828fde859c38a1cad46cc499d2273cdc50fb986",
+        "terminal_sha256": "d8805577ed7c7f422e266bb091f24d518a6dee4a3ede3844cc9468eadb1773a1",
+        "detector_result_sha256": "c9356b441d119771c13ac0b5722cf9b80cc88d90369daeb35e5f2e48839d8a55",
+        "lifecycles_sha256": "7bc5035986ae5330d4b5973cd97520fbf4fdfac03ae051befa8684866f3b7b08"
+      }
+    }
+  },
+  "comparison": {
+    "contract": {
+      "price_interval": "closed",
+      "active_time_interval": "half_open",
+      "event_bar_end": "bar_start_plus_900_seconds",
+      "direction_required_for_overlap": false,
+      "fill_required_for_population": false,
+      "zero_duration_overlap": false
+    },
+    "overlap": {
+      "official_secondary": {
+        "left_source": "ict_month04",
+        "right_source": "ict_secondary_17m",
+        "left_total": 1121,
+        "left_overlapped": 46,
+        "left_overlap_pct": 4.1034790365744875,
+        "right_total": 321,
+        "right_overlapped": 45,
+        "right_overlap_pct": 14.018691588785046,
+        "overlapping_pair_count": 46
+      },
+      "official_oss": {
+        "left_source": "ict_month04",
+        "right_source": "smartmoneyconcepts_ob_0_0_27",
+        "left_total": 1121,
+        "left_overlapped": 15,
+        "left_overlap_pct": 1.3380909901873328,
+        "right_total": 27,
+        "right_overlapped": 10,
+        "right_overlap_pct": 37.03703703703704,
+        "overlapping_pair_count": 15
+      },
+      "secondary_oss": {
+        "left_source": "ict_secondary_17m",
+        "right_source": "smartmoneyconcepts_ob_0_0_27",
+        "left_total": 321,
+        "left_overlapped": 0,
+        "left_overlap_pct": 0.0,
+        "right_total": 27,
+        "right_overlapped": 0,
+        "right_overlap_pct": 0.0,
+        "overlapping_pair_count": 0
+      }
+    },
+    "performance_delta_official_minus_secondary": {
+      "zone_count": 800,
+      "trade_count": 340,
+      "return_pct_points": -59.91259000000021,
+      "win_rate_pct_points": -27.42383875825322,
+      "max_drawdown_pct_points": -55.64209427814581,
+      "positive_segments": -1
+    }
+  },
+  "oss": {
+    "parameters": {
+      "swing_highs_lows.swing_length": 50,
+      "ob.close_mitigation": false,
+      "liquidity.range_percent": 0.01,
+      "all_arguments": "package defaults"
+    },
+    "summary": {
+      "package": "smartmoneyconcepts",
+      "version": "0.0.27",
+      "raw_ob_count": 27,
+      "comparison_ob_count": 27,
+      "bullish_ob_count": 23,
+      "bearish_ob_count": 4,
+      "mitigated_ob_count": 2,
+      "active_at_data_end_count": 25,
+      "raw_liquidity_count": 156,
+      "comparison_liquidity_count": 155,
+      "bullish_liquidity_count": 77,
+      "bearish_liquidity_count": 78
+    },
+    "hashes": {
+      "zones_sha256": "e976fa572dad1311bc244200d3d343ef1931913b712bac7065f787c3d40ef918",
+      "liquidity_sha256": "da8fada59af77fb3eecad60f9ad594a06e2438f50197eee4f9139d40a995ab84",
+      "oss_result_sha256": "b27880cce1e4f43b948fe00a6c59536726a3e9aa65a1607088b92da2e223cb8d"
+    },
+    "execution_or_pnl": false,
+    "population_note": "OB rows are the package's final surviving output, not all historical detection events. Default centered swings are retrospective labels."
+  },
+  "hashes": {
+    "stage6_result_sha256": "33a575c39a76b7918b8554e0c83506d312a95d9ba5bc82c6ae51152095cfe661",
+    "stage7_result_sha256": "4785466c033356924d9ff04402fe14ebaf2fb2cdca7eecaede10b165ffff6931",
+    "code_sha256": {
+      "chapters/season2/ch04_ict_order_blocks/build_manifest.py": "145964413921529bda3e3e40ead599fce64da086a902e4c92069273e13235019",
+      "chapters/season2/ch04_ict_order_blocks/compare.py": "ca0cdcbccbf1bee87540e17bf1444b68d414d9c78fc28b81769b7513b0c27604",
+      "chapters/season2/ch04_ict_order_blocks/run.py": "cebb9928da6e8c4fef546693f1f9d96d91f692e6e619bc3baf76d82f2073279a",
+      "chapters/season2/ch04_ict_order_blocks/verify.py": "1251f65c80bafad95b4481742db8c358fdb608af48b5364da3d94387687ee5f1",
+      "pyproject.toml": "ebaef4fc6bd6b8a3040bd9931541d6c102e28c9aac5625f8bd03a121162f4763",
+      "src/bocchi_the_botter_repro/season2/ict_ob.py": "9541387e10992bc1298311831ac70a459c24e88db3586337ddc00cfd451e6174",
+      "src/bocchi_the_botter_repro/season2/ict_ob_comparison.py": "039a158949db2180332399684924055b69e6d10d22fec06b9ae8f09225c3f018",
+      "src/bocchi_the_botter_repro/season2/ict_ob_evidence.py": "6f2fc9b4630f57387f0c49ec9497073c1c247c432f40f74f8035dd165c49f7b8",
+      "src/bocchi_the_botter_repro/season2/ict_ob_experiment.py": "16b5ebcada59636b03fd6d1a3a5322766923b24b725b0c52a1f3e22b4d9da940",
+      "src/bocchi_the_botter_repro/season2/minute_data.py": "cb4e48bc8971362aff5fad8461dd8db70d850e67cb5b316f7ce224eb828cad0e",
+      "src/bocchi_the_botter_repro/season2/orb_m15.py": "5995d3e5ed7d367f0ffd45f893fb97796e5172f25832e5c6519dfb8c0c38631b"
+    }
+  },
+  "public_boundary": {
+    "included": "aggregate counts, metrics, contracts, versions, hashes",
+    "excluded": "market rows, zone rows, liquidity rows, trade rows, individual prices, individual timestamps, SQLite, credentials, absolute paths",
+    "full_recalculation_requires": "a private read-only SQLite whose fixed M5 projection matches input.m5.extraction_sha256",
+    "claims": "Both frozen translations failed the predeclared criterion. No detector superiority or live-trading claim is made."
+  },
+  "commands": {
+    "rebuild": "python chapters/season2/ch04_ict_order_blocks/build_manifest.py --db \"$SOURCE_DB\" --reference-dir results/reference/ch04_ict_order_blocks --generated-at-utc 2026-07-21T00:03:16Z",
+    "verify_row_free": "python chapters/season2/ch04_ict_order_blocks/verify.py --reference-dir results/reference/ch04_ict_order_blocks"
+  }
+}

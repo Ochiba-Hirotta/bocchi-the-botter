@@ -27,3 +27,4 @@
 | S2-1 | `season2/ch01_orb_1h_translation/` | EURUSD・15 分足の ORB 最終形を USDJPY・1 時間足へ翻訳 |
 | S2-2 | `season2/ch02_minute_data_db/` | OANDA M5をSQLiteへ保存し、完全な三本だけをM15へ集約 |
 | S2-3 | `season2/ch03_orb_m15_retranslation/` | S2-2のcomplete M15でORBレンジを9:30–9:45 ETへ差し戻し、bid/ask別OHLCで検証 |
+| S2-4 | `season2/ch04_ict_order_blocks/` | 本家Month 04・二次sweep→MSS→FVGを同一条件で本走し、pin済みOSSとゾーン重なりを比較。row-free manifestで記事時点値を固定 |
