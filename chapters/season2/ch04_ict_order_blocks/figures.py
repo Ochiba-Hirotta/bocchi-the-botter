@@ -54,6 +54,56 @@ def load_manifest(reference_dir: Path) -> dict[str, Any]:
     )
     if abs(final_from_segments - float(summary["final_equity"])) > 1e-6:
         raise ValueError("segment PnL does not reconcile to final equity")
+
+    secondary = payload["detectors"]["secondary"]
+    secondary_summary = secondary["summary"]
+    secondary_exits = secondary["exit_reasons"]
+    secondary_segments = secondary["segments"]
+    if int(secondary_summary["trade_count"]) != sum(
+        int(value) for value in secondary_exits.values()
+    ):
+        raise ValueError(
+            "exit-reason counts do not sum to the secondary trade count"
+        )
+    if int(secondary_summary["trade_count"]) != sum(
+        int(segment["trade_count"]) for segment in secondary_segments
+    ):
+        raise ValueError(
+            "segment trade counts do not sum to the secondary trade count"
+        )
+    secondary_final = INITIAL_EQUITY_JPY + sum(
+        float(segment["pnl_jpy"]) for segment in secondary_segments
+    )
+    if abs(secondary_final - float(secondary_summary["final_equity"])) > 1e-6:
+        raise ValueError(
+            "secondary segment PnL does not reconcile to final equity"
+        )
+
+    counters = secondary["detection_counters"]
+    residual = (
+        int(counters["mss_confirmed"])
+        - int(counters["no_fvg"])
+        - int(counters["no_ob"])
+        - int(counters["zone_detected"])
+    )
+    if residual < 0:
+        raise ValueError("secondary funnel stages exceed confirmed structure shifts")
+    if int(counters["long_no_ob"]) + int(counters["short_no_ob"]) != int(
+        counters["no_ob"]
+    ):
+        raise ValueError("per-side no_ob counts do not sum to the total")
+    if int(counters["long_zone_detected"]) + int(
+        counters["short_zone_detected"]
+    ) != int(counters["zone_detected"]):
+        raise ValueError("per-side zone counts do not sum to the total")
+    if int(counters["zone_detected"]) != int(secondary_summary["zone_count"]):
+        raise ValueError("detected zones do not match the secondary zone count")
+
+    for pair in payload["comparison"]["overlap"].values():
+        if int(pair["left_overlapped"]) > int(pair["left_total"]):
+            raise ValueError("overlapped zones exceed the left population")
+        if int(pair["right_overlapped"]) > int(pair["right_total"]):
+            raise ValueError("overlapped zones exceed the right population")
     return payload
 
 
@@ -347,6 +397,190 @@ def plot_exit_reasons(manifest: dict[str, Any], output_dir: Path) -> Path:
     return output_path
 
 
+def plot_secondary_detection_funnel(
+    manifest: dict[str, Any], output_dir: Path
+) -> Path:
+    counters = manifest["detectors"]["secondary"]["detection_counters"]
+    sweeps = int(counters["sweep_detected"])
+    mss = int(counters["mss_confirmed"])
+    no_fvg = int(counters["no_fvg"])
+    no_ob = int(counters["no_ob"])
+    zones = int(counters["zone_detected"])
+    after_fvg = mss - no_fvg
+    after_ob = after_fvg - no_ob
+    bias_drop = after_ob - zones
+
+    stages = [
+        ("Liquidity sweeps", sweeps, None),
+        ("Structure shift within 12 bars", mss, sweeps - mss),
+        ("Imbalance present in the leg", after_fvg, no_fvg),
+        ("Opposite-colour candle found", after_ob, no_ob),
+        ("Bias still aligned at the shift", zones, bias_drop),
+    ]
+
+    figure, axis = plt.subplots(figsize=(8.6, 4.6))
+    positions = list(range(len(stages)))[::-1]
+    values = [stage[1] for stage in stages]
+    bars = axis.barh(
+        positions,
+        values,
+        color=[LIGHT_GRAY, LIGHT_GRAY, LIGHT_GRAY, LIGHT_GRAY, BLUE],
+        height=0.6,
+    )
+    axis.bar_label(bars, padding=4, fontsize=9.5)
+
+    for position, (_, _, dropped) in zip(positions, stages, strict=True):
+        if dropped:
+            axis.text(
+                sweeps * 0.995,
+                position,
+                f"-{dropped}",
+                ha="right",
+                va="center",
+                fontsize=9,
+                color=RED,
+            )
+
+    axis.set_yticks(positions, [stage[0] for stage in stages])
+    axis.set_title(f"Secondary translation: from {sweeps} sweeps to {zones} zones")
+    axis.set_xlabel("Events remaining")
+    axis.set_xlim(0, sweeps * 1.1)
+    axis.grid(axis="x", alpha=0.25)
+    axis.spines[["top", "right"]].set_visible(False)
+    figure.tight_layout()
+    output_path = output_dir / "secondary_detection_funnel.png"
+    save_figure(figure, output_path)
+    return output_path
+
+
+def plot_secondary_segment_results(
+    manifest: dict[str, Any], output_dir: Path
+) -> Path:
+    segments = manifest["detectors"]["secondary"]["segments"]
+    labels = [f"S{int(segment['segment'])}" for segment in segments]
+    values = [float(segment["pnl_jpy"]) / 10_000.0 for segment in segments]
+    counts = [int(segment["trade_count"]) for segment in segments]
+    colors = [GREEN if value > 0 else RED for value in values]
+
+    figure, axis = plt.subplots(figsize=(8.0, 4.5))
+    bars = axis.bar(labels, values, color=colors, width=0.58)
+    axis.axhline(0.0, color="#555555", linewidth=1.0)
+    for bar, value, count in zip(bars, values, counts, strict=True):
+        offset = 0.7 if value > 0 else -0.9
+        axis.text(
+            bar.get_x() + bar.get_width() / 2,
+            value + offset,
+            f"{value:+.1f}",
+            ha="center",
+            va="bottom" if value > 0 else "top",
+            fontsize=9.5,
+            color="#333333",
+        )
+        axis.text(
+            bar.get_x() + bar.get_width() / 2,
+            0.0,
+            f"{count} trades",
+            ha="center",
+            va="bottom" if value < 0 else "top",
+            fontsize=8.5,
+            color="#666666",
+        )
+
+    positive = sum(1 for value in values if value > 0)
+    axis.set_title(
+        f"Secondary translation: realised PnL per fixed 184-day segment "
+        f"({positive} of {len(values)} positive)"
+    )
+    axis.set_ylabel("Realised PnL (10k JPY)")
+    axis.set_ylim(min(values) - 3.5, max(values) + 3.5)
+    axis.grid(axis="y", alpha=0.25)
+    axis.spines[["top", "right"]].set_visible(False)
+    figure.tight_layout()
+    output_path = output_dir / "secondary_segment_results.png"
+    save_figure(figure, output_path)
+    return output_path
+
+
+def plot_definition_overlap(manifest: dict[str, Any], output_dir: Path) -> Path:
+    """Three independent pair comparisons.
+
+    Deliberately not a three-way Venn diagram: the frozen comparison measures
+    pairwise overlap only, and a shared-centre image would assert a common
+    intersection that was never computed.
+    """
+
+    overlap = manifest["comparison"]["overlap"]
+    names = {
+        "ict_month04": "40-min",
+        "ict_secondary_17m": "17-min",
+        "smartmoneyconcepts_ob_0_0_27": "implementation",
+    }
+
+    rows: list[tuple[str, int, int, float]] = []
+    positions: list[float] = []
+    cursor = 0.0
+    for key in ("official_secondary", "official_oss", "secondary_oss"):
+        pair = overlap[key]
+        left = names[pair["left_source"]]
+        right = names[pair["right_source"]]
+        rows.append(
+            (
+                f"{left}  →  {right}",
+                int(pair["left_overlapped"]),
+                int(pair["left_total"]),
+                float(pair["left_overlap_pct"]),
+            )
+        )
+        positions.append(cursor)
+        cursor -= 1.0
+        rows.append(
+            (
+                f"{right}  →  {left}",
+                int(pair["right_overlapped"]),
+                int(pair["right_total"]),
+                float(pair["right_overlap_pct"]),
+            )
+        )
+        positions.append(cursor)
+        cursor -= 1.7
+
+    figure, axis = plt.subplots(figsize=(9.4, 4.8))
+    axis.barh(positions, [100.0] * len(rows), color=LIGHT_GRAY, height=0.62)
+    axis.barh(
+        positions,
+        [row[3] for row in rows],
+        color=BLUE,
+        height=0.62,
+    )
+    for position, (_, overlapped, total, percent) in zip(
+        positions, rows, strict=True
+    ):
+        axis.text(
+            101.5,
+            position,
+            f"{overlapped} / {total:,}   ({percent:.1f}%)",
+            ha="left",
+            va="center",
+            fontsize=9.5,
+            color="#333333",
+        )
+
+    axis.set_yticks(positions, [row[0] for row in rows], fontsize=9.5)
+    axis.set_xlim(0, 148)
+    axis.set_xticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+    axis.set_xlabel("Share of that definition's own zones that overlapped")
+    axis.set_title(
+        "Pairwise zone overlap between three definitions of the same name",
+        fontsize=12,
+    )
+    axis.grid(axis="x", alpha=0.22)
+    axis.spines[["top", "right"]].set_visible(False)
+    figure.tight_layout()
+    output_path = output_dir / "definition_overlap.png"
+    save_figure(figure, output_path)
+    return output_path
+
+
 def write_figure_hashes(
     reference_dir: Path, output_paths: list[Path]
 ) -> Path:
@@ -368,7 +602,9 @@ def write_figure_hashes(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Generate the three S2-4 article figures from frozen row-free evidence."
+        description=(
+            "Generate the S2-4 and S2-5 article figures from frozen row-free evidence."
+        )
     )
     chapter_dir = Path(__file__).resolve().parent
     repo_root = chapter_dir.parents[2]
@@ -383,24 +619,41 @@ def main() -> int:
         "--article-output-dir",
         type=Path,
         default=None,
-        help="Optional second directory receiving byte-identical article PNGs.",
+        help="Optional second directory receiving byte-identical S2-4 article PNGs.",
+    )
+    parser.add_argument(
+        "--s2-5-article-output-dir",
+        type=Path,
+        default=None,
+        help="Optional second directory receiving byte-identical S2-5 article PNGs.",
     )
     args = parser.parse_args()
 
     manifest = load_manifest(args.reference_dir)
-    output_paths = [
+    s2_4_paths = [
         plot_bullish_ob_schema(args.output_dir),
         plot_segment_boundary_balance(manifest, args.output_dir),
         plot_exit_reasons(manifest, args.output_dir),
     ]
+    s2_5_paths = [
+        plot_secondary_detection_funnel(manifest, args.output_dir),
+        plot_secondary_segment_results(manifest, args.output_dir),
+        plot_definition_overlap(manifest, args.output_dir),
+    ]
+    output_paths = s2_4_paths + s2_5_paths
     hashes_path = write_figure_hashes(args.reference_dir, output_paths)
 
-    if args.article_output_dir is not None:
-        args.article_output_dir.mkdir(parents=True, exist_ok=True)
-        for path in output_paths:
-            shutil.copy2(path, args.article_output_dir / path.name)
+    for target, paths in (
+        (args.article_output_dir, s2_4_paths),
+        (args.s2_5_article_output_dir, s2_5_paths),
+    ):
+        if target is None:
+            continue
+        target.mkdir(parents=True, exist_ok=True)
+        for path in paths:
+            shutil.copy2(path, target / path.name)
 
-    print(f"wrote three S2-4 figures to {args.output_dir}")
+    print(f"wrote three S2-4 and three S2-5 figures to {args.output_dir}")
     print(f"wrote figure hashes to {hashes_path}")
     return 0
 
